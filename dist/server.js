@@ -21,14 +21,12 @@ app.use(_express2.default.static(_path2.default.join(__dirname, 'public')));
 var cleanersRouter = _express2.default.Router();
 
 cleanersRouter.get('/nearby/:latitude/:longitude', function (req, res) {
-	console.log('/cleaners/nearby');
-	console.log('params', req.params);
-	res.status(202).send();
+	res.status(200).send();
 });
 
 cleanersRouter.get('/best', function (req, res) {
-	console.log('/cleaners/best');
-	res.status(202).send();
+	var data = [{ name: "John Doe", rating: 4.5 }, { name: "Jane Doe", rating: 2.0 }, { name: "Tim Brown", rating: 4.2 }];
+	res.status(200).json(data);
 });
 
 app.use('/cleaners', cleanersRouter);
