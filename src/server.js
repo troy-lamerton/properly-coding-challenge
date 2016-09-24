@@ -7,14 +7,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const cleanersRouter = express.Router();
 
-cleanersRouter.get('/nearby', function (req, res) {
+cleanersRouter.get('/nearby/:latitude/:longitude', function (req, res) {
 	console.log('/cleaners/nearby');
-	res.status(202).end();
+	console.log('params', req.params);
+	res.status(202).send();
 });
 
 cleanersRouter.get('/best', function (req, res) {
 	console.log('/cleaners/best');
-	res.status(202).end();
+	res.status(202).send();
 });
 
 app.use('/cleaners', cleanersRouter);

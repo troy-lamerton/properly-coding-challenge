@@ -20,14 +20,15 @@ app.use(_express2.default.static(_path2.default.join(__dirname, 'public')));
 
 var cleanersRouter = _express2.default.Router();
 
-cleanersRouter.get('/nearby', function (req, res) {
+cleanersRouter.get('/nearby/:latitude/:longitude', function (req, res) {
 	console.log('/cleaners/nearby');
-	res.status(202).end();
+	console.log('params', req.params);
+	res.status(202).send();
 });
 
 cleanersRouter.get('/best', function (req, res) {
 	console.log('/cleaners/best');
-	res.status(202).end();
+	res.status(202).send();
 });
 
 app.use('/cleaners', cleanersRouter);
