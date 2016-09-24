@@ -23,7 +23,6 @@ app.use(function render(req, res) {
 	res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
-
 if (module && !module.parent) {
 	app.listen(process.env.PORT || 4000);
 }

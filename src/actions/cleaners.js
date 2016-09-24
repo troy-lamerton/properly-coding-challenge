@@ -1,5 +1,5 @@
 export function load() {
 	return {
-		//TODO: load cleaners
+		// TODO: load cleaners
 	};
 }

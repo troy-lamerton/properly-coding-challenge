@@ -34275,7 +34275,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.load = load;
 function load() {
 	return {
-		//TODO: load cleaners
+		// TODO: load cleaners
 	};
 }
 
@@ -34400,7 +34400,7 @@ var CleanersList = function (_React$Component) {
 		return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = CleanersList.__proto__ || Object.getPrototypeOf(CleanersList)).call.apply(_ref, [this].concat(args))), _this), _this.loadCleaners = function () {
 			return function (event) {
 				event.preventDefault();
-				//TODO: load cleaners from the database
+				// TODO: load cleaners from the database
 			};
 		}, _temp), _possibleConstructorReturn(_this, _ret);
 	}
@@ -34424,8 +34424,7 @@ var CleanersList = function (_React$Component) {
 					'a',
 					{ onClick: loadCleaners() },
 					'Best Cleaners'
-				),
-				'//TODO: display cleaners'
+				)
 			);
 		}
 	}]);

@@ -5,7 +5,7 @@ class CleanersList extends React.Component {
 
 	loadCleaners = () => (event) => {
 		event.preventDefault();
-		//TODO: load cleaners from the database
+		// TODO: load cleaners from the database
 	}
 
 	render() {
@@ -15,7 +15,7 @@ class CleanersList extends React.Component {
 		return (<div>
 			<a onClick={loadCleaners()}>Cleaners Nearby</a><br/>
 			<a onClick={loadCleaners()}>Best Cleaners</a>
-			//TODO: display cleaners
+			{/* TODO: display cleaners */}
 
 		</div>);
 	}

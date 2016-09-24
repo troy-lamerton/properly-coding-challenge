@@ -6,6 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.load = load;
 function load() {
 	return {
-		//TODO: load cleaners
+		// TODO: load cleaners
 	};
 }
