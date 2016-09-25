@@ -1,5 +1,6 @@
 import path from 'path';
 import express from 'express';
+import fs from 'fs';
 
 const app = express();
 
@@ -8,7 +9,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 const cleanersRouter = express.Router();
 
 cleanersRouter.get('/nearby/:latitude/:longitude', (req, res) => {
-	res.status(200).send();
+	fs.readFile(path.join(__dirname, '../src/database/database.json'), 'utf8', (err, data) => {
+		if (err) {
+			throw err;
+		}
+		res.status(200).json(data);
+	});
 });
 
 cleanersRouter.get('/best', (req, res) => {
@@ -17,6 +23,7 @@ cleanersRouter.get('/best', (req, res) => {
 		{name: "Jane Doe", rating: 2.0},
 		{name: "Tim Brown", rating: 4.2}
 	];
+
 	res.status(200).json(data);
 });
 
