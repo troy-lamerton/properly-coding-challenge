@@ -13,6 +13,21 @@ test('get best cleaners', t => {
   	}).then( data => {
   		t.true(data instanceof Array);
 	    t.is(data.length, 3);
+	    
+	    // check that cleaners in the first array have a rating >= 4
+	    t.true(data[0].every(cleaner => {
+	    	return cleaner.rating >= 4;
+	    }));
+
+	    // check that cleaners in the second array have a rating >= 3 and < 4
+	    t.true(data[1].every(cleaner => {
+	    	return cleaner.rating >= 3 && cleaner.rating < 4;
+	    }));
+
+	    // check that cleaners in the third array have a rating >= 2 and < 3
+	    t.true(data[2].every(cleaner => {
+	    	return cleaner.rating >= 2 && cleaner.rating < 3;
+	    }));
   	})
   	.catch( err => {
   		t.fail(`The request resulted in the error: ${err}`);

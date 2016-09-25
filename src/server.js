@@ -10,8 +10,8 @@ const cleanersRouter = express.Router();
 
 function cleanerIsNearby (myLocation, cleaner) {
 	const withinDistance = 0.02;
-	return Math.abs(myLocation.lat - cleaner.lat) < withinDistance
-	&& Math.abs(myLocation.lng - cleaner.lng) < withinDistance;
+	return Math.abs(myLocation.lat - cleaner.lat) < withinDistance &&
+	Math.abs(myLocation.lng - cleaner.lng) < withinDistance;
 }
 
 cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
@@ -43,7 +43,7 @@ cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
 			editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
 
 			return editedCleaner;
-		})
+		});
 
 		// sort cleaners descending by rating
 		nearbyCleanersAveraged.sort((a, b) => {
