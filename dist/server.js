@@ -29,6 +29,22 @@ function cleanerIsNearby(myLocation, cleaner) {
 	return Math.abs(myLocation.lat - cleaner.lat) < withinDistance && Math.abs(myLocation.lng - cleaner.lng) < withinDistance;
 }
 
+function averageCleanerRatings(cleanersArray) {
+	return cleanersArray.map(function (cleaner) {
+		var editedCleaner = {
+			name: cleaner.name
+		};
+		editedCleaner.rating = cleaner.ratings.reduce(function (sum, number) {
+			return sum + number;
+		}) / cleaner.ratings.length;
+
+		// round rating to nearest 0.5
+		editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
+
+		return editedCleaner;
+	});
+}
+
 cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
 	_fs2.default.readFile(_path2.default.join(__dirname, '../src/database/database.json'), 'utf8', function (err, data) {
 		if (err) {
@@ -46,19 +62,7 @@ cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
 		});
 
 		// remove location data and average the cleaners ratings
-		var nearbyCleanersAveraged = nearbyCleaners.map(function (cleaner) {
-			var editedCleaner = {
-				name: cleaner.name
-			};
-			editedCleaner.rating = cleaner.ratings.reduce(function (sum, number) {
-				return sum + number;
-			}) / cleaner.ratings.length;
-
-			// round rating to nearest 0.5
-			editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
-
-			return editedCleaner;
-		});
+		var nearbyCleanersAveraged = averageCleanerRatings(nearbyCleaners);
 
 		// sort cleaners descending by rating
 		nearbyCleanersAveraged.sort(function (a, b) {
@@ -70,9 +74,9 @@ cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
 });
 
 cleanersRouter.get('/best', function (req, res) {
-	var data = [{ name: "John Doe", rating: 4.5 }, { name: "Jane Doe", rating: 2.0 }, { name: "Tim Brown", rating: 4.2 }];
-
-	res.status(200).json(data);
+	_fs2.default.readFile(_path2.default.join(__dirname, '../src/database/database.json'), 'utf8', function (err, data) {
+		res.status(200).json(data);
+	});
 });
 
 app.use('/cleaners', cleanersRouter);

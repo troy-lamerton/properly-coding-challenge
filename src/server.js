@@ -8,10 +8,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const cleanersRouter = express.Router();
 
-function cleanerIsNearby (myLocation, cleaner) {
+function cleanerIsNearby(myLocation, cleaner) {
 	const withinDistance = 0.02;
 	return Math.abs(myLocation.lat - cleaner.lat) < withinDistance &&
 	Math.abs(myLocation.lng - cleaner.lng) < withinDistance;
+}
+
+function averageCleanerRatings(cleanersArray) {
+	return cleanersArray.map(cleaner => {
+		const editedCleaner = {
+			name: cleaner.name
+		};
+		editedCleaner.rating = cleaner.ratings.reduce((sum, number) => {
+			return sum + number;
+		}) / cleaner.ratings.length;
+
+		// round rating to nearest 0.5
+		editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
+
+		return editedCleaner;
+	});
 }
 
 cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
@@ -31,19 +47,7 @@ cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
 		});
 
 		// remove location data and average the cleaners ratings
-		const nearbyCleanersAveraged = nearbyCleaners.map(cleaner => {
-			const editedCleaner = {
-				name: cleaner.name
-			};
-			editedCleaner.rating = cleaner.ratings.reduce((sum, number) => {
-				return sum + number;
-			}) / cleaner.ratings.length;
-
-			// round rating to nearest 0.5
-			editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
-
-			return editedCleaner;
-		});
+		const nearbyCleanersAveraged = averageCleanerRatings(nearbyCleaners);
 
 		// sort cleaners descending by rating
 		nearbyCleanersAveraged.sort((a, b) => {
@@ -55,13 +59,9 @@ cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
 });
 
 cleanersRouter.get('/best', (req, res) => {
-	const data = [
-		{name: "John Doe", rating: 4.5},
-		{name: "Jane Doe", rating: 2.0},
-		{name: "Tim Brown", rating: 4.2}
-	];
-
-	res.status(200).json(data);
+	fs.readFile(path.join(__dirname, '../src/database/database.json'), 'utf8', (err, data) => {
+		res.status(200).json(data);
+	});
 });
 
 app.use('/cleaners', cleanersRouter);
