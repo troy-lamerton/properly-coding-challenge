@@ -45,17 +45,20 @@ cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
 			return cleanerIsNearby(myLocation, cleaner);
 		});
 
-		nearbyCleaners.sort(function (a, b) {
-			var aRating = a.ratings.reduce(function (sum, number) {
+		var nearbyCleanersAveraged = nearbyCleaners.map(function (cleaner) {
+			var editedCleaner = {
+				name: cleaner.name
+			};
+			editedCleaner.rating = cleaner.ratings.reduce(function (sum, number) {
 				return sum + number;
-			}) / a.ratings.length;
-			var bRating = b.ratings.reduce(function (sum, number) {
-				return sum + number;
-			}) / b.ratings.length;
+			}) / cleaner.ratings.length;
 
-			return bRating - aRating;
+			return editedCleaner;
 		});
-		res.status(200).json(nearbyCleaners);
+		nearbyCleanersAveraged.sort(function (a, b) {
+			return b.rating - a.rating;
+		});
+		res.status(200).json(nearbyCleanersAveraged);
 	});
 });
 

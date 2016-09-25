@@ -30,17 +30,20 @@ cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
 			return cleanerIsNearby(myLocation, cleaner);
 		});
 
-		nearbyCleaners.sort((a, b) => {
-			const aRating = a.ratings.reduce((sum, number) => {
+		const nearbyCleanersAveraged = nearbyCleaners.map(cleaner => {
+			const editedCleaner = {
+				name: cleaner.name
+			};
+			editedCleaner.rating = cleaner.ratings.reduce((sum, number) => {
 				return sum + number;
-			}) / a.ratings.length;
-			const bRating = b.ratings.reduce((sum, number) => {
-				return sum + number;
-			}) / b.ratings.length;
+			}) / cleaner.ratings.length;
 
-			return bRating - aRating;
+			return editedCleaner;
+		})
+		nearbyCleanersAveraged.sort((a, b) => {
+			return b.rating - a.rating;
 		});
-		res.status(200).json(nearbyCleaners);
+		res.status(200).json(nearbyCleanersAveraged);
 	});
 });
 
