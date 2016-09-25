@@ -28,7 +28,15 @@ test('get nearby cleaners', t => {
 			t.is(data.length, 2);
 			t.is(data[0].name, 'John');
 			t.is(data[1].name, 'Mary');
-	    t.true(data[0].rating > data[1].rating);
+
+			const firstAverageRating = data[0].ratings.reduce((sum, number) => {
+				return sum + number;
+			}) / data[0].ratings.length;
+			const secondAverageRating = data[1].ratings.reduce((sum, number) => {
+				return sum + number;
+			}) / data[1].ratings.length;
+
+	    t.true(firstAverageRating > secondAverageRating);
 		})
 		.catch( err => {
 			t.fail(`The request resulted in the error: ${err}`);
