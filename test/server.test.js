@@ -25,18 +25,24 @@ test('get nearby cleaners', t => {
   		return JSON.parse(body);
   	}).then( data => {
 			t.true(data instanceof Array);
-			t.is(data.length, 2);
-			t.is(data[0].name, 'John');
-			t.is(data[1].name, 'Mary');
+			t.true(data.length >= 2);
+			const cleanerJohn = data.find(cleaner => {
+				return cleaner.name === 'John';
+			});
+			const cleanerMary = data.find(cleaner => {
+				return cleaner.name === 'Mary';
+			});
+			t.not(cleanerJohn, undefined);
+			t.not(cleanerMary, undefined);
 
-			const firstAverageRating = data[0].ratings.reduce((sum, number) => {
+			const firstAverageRating = cleanerJohn.ratings.reduce((sum, number) => {
 				return sum + number;
-			}) / data[0].ratings.length;
-			const secondAverageRating = data[1].ratings.reduce((sum, number) => {
+			}) / cleanerJohn.ratings.length;
+			let secondAverageRating = cleanerMary.ratings.reduce((sum, number) => {
 				return sum + number;
-			}) / data[1].ratings.length;
+			}) / cleanerMary.ratings.length;
 
-	    t.true(firstAverageRating > secondAverageRating);
+	    t.true(firstAverageRating >= secondAverageRating);
 		})
 		.catch( err => {
 			t.fail(`The request resulted in the error: ${err}`);
