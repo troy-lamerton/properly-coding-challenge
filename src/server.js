@@ -30,6 +30,7 @@ cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
 			return cleanerIsNearby(myLocation, cleaner);
 		});
 
+		// remove location data and average the cleaners ratings
 		const nearbyCleanersAveraged = nearbyCleaners.map(cleaner => {
 			const editedCleaner = {
 				name: cleaner.name
@@ -38,11 +39,17 @@ cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
 				return sum + number;
 			}) / cleaner.ratings.length;
 
+			// round rating to nearest 0.5
+			editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
+
 			return editedCleaner;
 		})
+
+		// sort cleaners descending by rating
 		nearbyCleanersAveraged.sort((a, b) => {
 			return b.rating - a.rating;
 		});
+
 		res.status(200).json(nearbyCleanersAveraged);
 	});
 });
