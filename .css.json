@@ -1,5 +1,5 @@
 {
   "input": "src/styles/app.css",
   "output": "dist/public/app.css",
-  "use": ["autoprefixer"]
+  "use": ["autoprefixer", "precss"]
 }
