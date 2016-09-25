@@ -14,20 +14,31 @@ test('get best cleaners', t => {
   		t.true(data instanceof Array);
 	    t.is(data.length, 3);
 	    
+	    t.true(data[0] instanceof Array);
 	    // check that cleaners in the first array have a rating >= 4
 	    t.true(data[0].every(cleaner => {
 	    	return cleaner.rating >= 4;
 	    }));
 
+	    t.true(data[1] instanceof Array);
 	    // check that cleaners in the second array have a rating >= 3 and < 4
 	    t.true(data[1].every(cleaner => {
 	    	return cleaner.rating >= 3 && cleaner.rating < 4;
 	    }));
 
+	    t.true(data[2] instanceof Array);
 	    // check that cleaners in the third array have a rating >= 2 and < 3
 	    t.true(data[2].every(cleaner => {
 	    	return cleaner.rating >= 2 && cleaner.rating < 3;
 	    }));
+
+	    // concat the three cleaners arrays
+	    const bestCleaners = [].concat.apply([], data)
+	    // check that cleaners are sorted in descending order by rating
+	    bestCleaners.reduce((previous, current) => {
+	    	if (previous.rating < current.rating) t.fail('Cleaners are not sorted in descending order by rating');
+	    });
+
   	})
   	.catch( err => {
   		t.fail(`The request resulted in the error: ${err}`);
