@@ -10,8 +10,8 @@ const cleanersRouter = express.Router();
 
 function cleanerIsNearby(myLocation, cleaner) {
 	const withinDistance = 0.02;
-	return Math.abs(myLocation.lat - cleaner.lat) < withinDistance &&
-	Math.abs(myLocation.lng - cleaner.lng) < withinDistance;
+	return (Math.abs(myLocation.lat - cleaner.lat) < withinDistance &&
+	Math.abs(myLocation.lng - cleaner.lng) < withinDistance);
 }
 
 /* remove location data and average the cleaners ratings */
@@ -20,20 +20,25 @@ function averageCleanerRatings(cleanersArray, round = false) {
 		const editedCleaner = {
 			name: cleaner.name
 		};
-		editedCleaner.rating = cleaner.ratings.reduce((sum, number) => {
-			return sum + number;
-		}) / cleaner.ratings.length;
+
+		// compute the average rating if it hasn't been already
+		if (cleaner.ratings) {
+			editedCleaner.rating = cleaner.ratings.reduce((sum, number) => {
+				return sum + number;
+			}) / cleaner.ratings.length;
+		} else {
+			editedCleaner.rating = cleaner.rating;
+		}
 
 		if (round) {
 			// round rating to nearest 0.5
-			editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
+			editedCleaner.rating = Math.round(cleaner.rating * 2) / 2;
 		}
-
 		return editedCleaner;
 	});
 }
 
-function sortByRating (a, b) {
+function sortByRating(a, b) {
 	return b.rating - a.rating;
 }
 
@@ -64,8 +69,12 @@ cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
 
 cleanersRouter.get('/best', (req, res) => {
 	fs.readFile(path.join(__dirname, '../src/database/database.json'), 'utf8', (err, data) => {
-		const allCleaners = averageCleanerRatings(data);
+		if (err) {
+			throw err;
+		}
 
+		const dataObject = JSON.parse(data);
+		let allCleaners = averageCleanerRatings(dataObject);
 		allCleaners.sort(sortByRating);
 
 		const bestCleaners = [
@@ -74,14 +83,18 @@ cleanersRouter.get('/best', (req, res) => {
 			[]
 		];
 
-		allCleaners.forEach(cleaner => {
-			if (cleaner.rating >= 4) bestCleaners[0].push(cleaner);
-			else if (cleaner.rating >= 3) bestCleaners[1].push(cleaner);
-			else if (cleaner.rating >= 2) bestCleaners[2].push(cleaner);
-		});
-
 		// round ratings to nearest 0.5
-		bestCleaners.map(cleanerArray => averageCleanerRatings(cleanerArray, true));
+		allCleaners = averageCleanerRatings(allCleaners, true);
+		
+		allCleaners.forEach(cleaner => {
+			if (cleaner.rating >= 4) {
+				bestCleaners[0].push(cleaner);
+			} else if (cleaner.rating >= 3) {
+				bestCleaners[1].push(cleaner);
+			}	else if (cleaner.rating >= 2) {
+				bestCleaners[2].push(cleaner);
+			}
+		});
 		res.status(200).json(bestCleaners);
 	});
 });

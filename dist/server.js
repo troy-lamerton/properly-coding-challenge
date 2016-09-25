@@ -37,15 +37,20 @@ function averageCleanerRatings(cleanersArray) {
 		var editedCleaner = {
 			name: cleaner.name
 		};
-		editedCleaner.rating = cleaner.ratings.reduce(function (sum, number) {
-			return sum + number;
-		}) / cleaner.ratings.length;
+
+		// compute the average rating if it hasn't been already
+		if (cleaner.ratings) {
+			editedCleaner.rating = cleaner.ratings.reduce(function (sum, number) {
+				return sum + number;
+			}) / cleaner.ratings.length;
+		} else {
+			editedCleaner.rating = cleaner.rating;
+		}
 
 		if (round) {
 			// round rating to nearest 0.5
-			editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
+			editedCleaner.rating = Math.round(cleaner.rating * 2) / 2;
 		}
-
 		return editedCleaner;
 	});
 }
@@ -81,19 +86,27 @@ cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
 
 cleanersRouter.get('/best', function (req, res) {
 	_fs2.default.readFile(_path2.default.join(__dirname, '../src/database/database.json'), 'utf8', function (err, data) {
-		var allCleaners = averageCleanerRatings(data);
+		if (err) {
+			throw err;
+		}
 
+		var dataObject = JSON.parse(data);
+		var allCleaners = averageCleanerRatings(dataObject);
 		allCleaners.sort(sortByRating);
 
 		var bestCleaners = [[], [], []];
 
-		allCleaners.forEach(function (cleaner) {
-			if (cleaner.rating >= 4) bestCleaners[0].push(cleaner);else if (cleaner.rating >= 3) bestCleaners[1].push(cleaner);else if (cleaner.rating >= 2) bestCleaners[2].push(cleaner);
-		});
-
 		// round ratings to nearest 0.5
-		bestCleaners.map(function (cleanerArray) {
-			return averageCleanerRatings(cleanerArray, true);
+		allCleaners = averageCleanerRatings(allCleaners, true);
+
+		allCleaners.forEach(function (cleaner) {
+			if (cleaner.rating >= 4) {
+				bestCleaners[0].push(cleaner);
+			} else if (cleaner.rating >= 3) {
+				bestCleaners[1].push(cleaner);
+			} else if (cleaner.rating >= 2) {
+				bestCleaners[2].push(cleaner);
+			}
 		});
 		res.status(200).json(bestCleaners);
 	});
