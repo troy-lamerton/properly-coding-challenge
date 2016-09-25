@@ -29,7 +29,10 @@ function cleanerIsNearby(myLocation, cleaner) {
 	return Math.abs(myLocation.lat - cleaner.lat) < withinDistance && Math.abs(myLocation.lng - cleaner.lng) < withinDistance;
 }
 
+/* remove location data and average the cleaners ratings */
 function averageCleanerRatings(cleanersArray) {
+	var round = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
 	return cleanersArray.map(function (cleaner) {
 		var editedCleaner = {
 			name: cleaner.name
@@ -38,8 +41,10 @@ function averageCleanerRatings(cleanersArray) {
 			return sum + number;
 		}) / cleaner.ratings.length;
 
-		// round rating to nearest 0.5
-		editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
+		if (round) {
+			// round rating to nearest 0.5
+			editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
+		}
 
 		return editedCleaner;
 	});
@@ -61,8 +66,7 @@ cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
 			return cleanerIsNearby(myLocation, cleaner);
 		});
 
-		// remove location data and average the cleaners ratings
-		var nearbyCleanersAveraged = averageCleanerRatings(nearbyCleaners);
+		var nearbyCleanersAveraged = averageCleanerRatings(nearbyCleaners, true);
 
 		// sort cleaners descending by rating
 		nearbyCleanersAveraged.sort(function (a, b) {
@@ -75,7 +79,19 @@ cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
 
 cleanersRouter.get('/best', function (req, res) {
 	_fs2.default.readFile(_path2.default.join(__dirname, '../src/database/database.json'), 'utf8', function (err, data) {
-		res.status(200).json(data);
+		var allCleaners = averageCleanerRatings(data);
+
+		var bestCleaners = [[], [], []];
+
+		allCleaners.forEach(function (cleaner) {
+			if (cleaner.rating >= 4) bestCleaners[0].push(cleaner);else if (cleaner.rating >= 3) bestCleaners[1].push(cleaner);else if (cleaner.rating >= 2) bestCleaners[2].push(cleaner);
+		});
+
+		// round ratings to nearest 0.5
+		bestCleaners.map(function (cleanerArray) {
+			return averageCleanerRatings(cleanerArray, true);
+		});
+		res.status(200).json(bestCleaners);
 	});
 });
 
