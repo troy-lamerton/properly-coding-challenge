@@ -1,0 +1,31 @@
+.cleaners-list {
+  background-color: #e5e5e5;
+  color: gray;
+}
+
+.cleaners-list .list {
+  background-color: white;
+}
+
+.cleaners-list .list .profile-pic {
+  border-radius: 50%;
+}
+
+.cleaners-list .list .cleaner color: black
+      .star-list {
+  padding: 3px 0 0 3px;
+}
+
+.cleaners-list .list .cleaner color: black
+      .star-list .star {
+  width: 10px;
+  height: 10px;
+}
+
+.button {
+  color: gray;
+}
+
+.active {
+  color: red;
+}

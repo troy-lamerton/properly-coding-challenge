@@ -44,6 +44,7 @@
     "mkdirp": "^0.5.1",
     "onchange": "^2.1.2",
     "postcss-cli": "^2.5.1",
+    "precss": "^1.4.0",
     "watchify": "^3.7.0",
     "xo": "^0.13.0"
   },
