@@ -24,12 +24,38 @@ app.use(_express2.default.static(_path2.default.join(__dirname, 'public')));
 
 var cleanersRouter = _express2.default.Router();
 
-cleanersRouter.get('/nearby/:latitude/:longitude', function (req, res) {
+function cleanerIsNearby(myLocation, cleaner) {
+	var withinDistance = 0.02;
+	return Math.abs(myLocation.lat - cleaner.lat) < withinDistance && Math.abs(myLocation.lng - cleaner.lng) < withinDistance;
+}
+
+cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
 	_fs2.default.readFile(_path2.default.join(__dirname, '../src/database/database.json'), 'utf8', function (err, data) {
 		if (err) {
 			throw err;
 		}
-		res.status(200).json(data);
+
+		var myLocation = {
+			lat: req.params.lat,
+			lng: req.params.lng
+		};
+
+		var dataObject = JSON.parse(data);
+		var nearbyCleaners = dataObject.filter(function (cleaner) {
+			return cleanerIsNearby(myLocation, cleaner);
+		});
+
+		nearbyCleaners.sort(function (a, b) {
+			var aRating = a.ratings.reduce(function (sum, number) {
+				return sum + number;
+			}) / a.ratings.length;
+			var bRating = b.ratings.reduce(function (sum, number) {
+				return sum + number;
+			}) / b.ratings.length;
+
+			return bRating - aRating;
+		});
+		res.status(200).json(nearbyCleaners);
 	});
 });
 

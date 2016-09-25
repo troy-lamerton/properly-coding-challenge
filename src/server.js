@@ -8,12 +8,39 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const cleanersRouter = express.Router();
 
-cleanersRouter.get('/nearby/:latitude/:longitude', (req, res) => {
+function cleanerIsNearby (myLocation, cleaner) {
+	const withinDistance = 0.02;
+	return Math.abs(myLocation.lat - cleaner.lat) < withinDistance
+	&& Math.abs(myLocation.lng - cleaner.lng) < withinDistance;
+}
+
+cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
 	fs.readFile(path.join(__dirname, '../src/database/database.json'), 'utf8', (err, data) => {
 		if (err) {
 			throw err;
 		}
-		res.status(200).json(data);
+
+		const myLocation = {
+			lat: req.params.lat,
+			lng: req.params.lng
+		};
+
+		const dataObject = JSON.parse(data);
+		const nearbyCleaners = dataObject.filter(cleaner => {
+			return cleanerIsNearby(myLocation, cleaner);
+		});
+
+		nearbyCleaners.sort((a, b) => {
+			const aRating = a.ratings.reduce((sum, number) => {
+				return sum + number;
+			}) / a.ratings.length;
+			const bRating = b.ratings.reduce((sum, number) => {
+				return sum + number;
+			}) / b.ratings.length;
+
+			return bRating - aRating;
+		});
+		res.status(200).json(nearbyCleaners);
 	});
 });
 
