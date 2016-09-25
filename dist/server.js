@@ -50,6 +50,10 @@ function averageCleanerRatings(cleanersArray) {
 	});
 }
 
+function sortByRating(a, b) {
+	return b.rating - a.rating;
+}
+
 cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
 	_fs2.default.readFile(_path2.default.join(__dirname, '../src/database/database.json'), 'utf8', function (err, data) {
 		if (err) {
@@ -69,9 +73,7 @@ cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
 		var nearbyCleanersAveraged = averageCleanerRatings(nearbyCleaners, true);
 
 		// sort cleaners descending by rating
-		nearbyCleanersAveraged.sort(function (a, b) {
-			return b.rating - a.rating;
-		});
+		nearbyCleanersAveraged.sort(sortByRating);
 
 		res.status(200).json(nearbyCleanersAveraged);
 	});
@@ -80,6 +82,8 @@ cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
 cleanersRouter.get('/best', function (req, res) {
 	_fs2.default.readFile(_path2.default.join(__dirname, '../src/database/database.json'), 'utf8', function (err, data) {
 		var allCleaners = averageCleanerRatings(data);
+
+		allCleaners.sort(sortByRating);
 
 		var bestCleaners = [[], [], []];
 
