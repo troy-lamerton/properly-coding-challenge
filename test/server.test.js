@@ -35,14 +35,7 @@ test('get nearby cleaners', t => {
 			t.not(cleanerJohn, undefined);
 			t.not(cleanerMary, undefined);
 
-			const firstAverageRating = cleanerJohn.ratings.reduce((sum, number) => {
-				return sum + number;
-			}) / cleanerJohn.ratings.length;
-			let secondAverageRating = cleanerMary.ratings.reduce((sum, number) => {
-				return sum + number;
-			}) / cleanerMary.ratings.length;
-
-	    t.true(firstAverageRating >= secondAverageRating);
+	    t.true(cleanerJohn.rating >= cleanerMary.rating);
 		})
 		.catch( err => {
 			t.fail(`The request resulted in the error: ${err}`);
