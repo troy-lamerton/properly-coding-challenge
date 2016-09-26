@@ -1,37 +1,43 @@
-[{
-  "name": "James",
-  "responseRate": 0.3,
-  "ratings": [2, 1, 4, 3, 5, 4, 3, 4, 5],
-  "lat": 37.77,
-  "lng": -122.46
-},
+[
+  {
+    "name": "James",
+    "responseRate": 0.3,
+    "ratings": [2, 1, 4, 3, 5, 4, 3, 4, 5],
+    "lat": 37.77,
+    "lng": -122.46,
+    "picture": "http://www.richard-seaman.com/Birds/NewZealand/CommonForest/KeaAndMountain.jpg"
+  },
   {
     "name": "Mary",
     "responseRate": 1.0,
     "ratings": [1, 1, 3, 2, 3, 1, 2],
     "lat": 37.78,
-    "lng": -122.40
+    "lng": -122.40,
+    "picture": "http://www.adventurenewzealand.info/files/2012/12/Kiwi.jpg"
   },
   {
     "name": "John",
     "responseRate": 0.9,
     "ratings": [4, 5, 3, 3, 4, 5, 5],
     "lat": 37.78,
-    "lng": -122.40
+    "lng": -122.40,
+    "picture": "https://67.media.tumblr.com/5bd6031015cb6fdf40649cadcec78055/tumblr_nq9f4rU7Cz1tic84no1_500.jpg"
   },
   {
     "name": "Patricia",
     "responseRate": 0.5,
     "ratings": [2, 1, 4, 5],
     "lat": 37.88,
-    "lng": -122.67
+    "lng": -122.67,
+    "picture": "https://upload.wikimedia.org/wikipedia/commons/4/46/070308_Stewart_Island_robin_on_Ulva.jpg"
   },
   {
     "name": "Robert",
     "responseRate": 0.6,
     "ratings": [5,4,5,5,5,4,5,4],
     "lat": 37.95,
-    "lng": -122.77
+    "lng": -122.77,
+    "picture": "http://www.doc.govt.nz/pagefiles/1798/saddleback565.jpg"
 
   },
   {
@@ -39,27 +45,31 @@
     "responseRate": 0.7,
     "ratings": [4, 3, 5, 4, 2, 3, 4, 5, 5, 4, 3, 4, 5, 4, 3, 4, 5, 3, 4, 4],
     "lat": 37.98,
-    "lng": -122.11
+    "lng": -122.11,
+    "picture": "https://static.stuff.co.nz/1352243931/778/7917778.jpg"
   },
   {
     "name": "Michael",
     "responseRate": 0.9,
     "ratings": [5,5,5,5,5,5,5],
     "lat": 37.41,
-    "lng": -122.29
+    "lng": -122.29,
+    "picture": "http://www.aphotofauna.com/images/birds/wood_pigeon_columba_palumbus_12-12-05_1.jpg"
   },
   {
     "name": "Elizabeth",
     "responseRate": 0.8,
     "ratings": [4, 3, 4, 4, 4, 3],
     "lat": 37.47,
-    "lng": -121.96
+    "lng": -121.96,
+    "picture": "http://www.new-zealand-vacations-in-west-auckland.com/images/pukeko_550-413.jpg"
   },
   {
     "name": "Nathan",
     "responseRate": 0.8,
     "ratings": [1,1,1,2,1,2],
     "lat": 37.47,
-    "lng": -121.96
+    "lng": -121.96,
+    "picture": "http://i2.wp.com/hauntedauckland.com/site/wp-content/uploads/419px-Megalapteryx.png"
   }
 ]

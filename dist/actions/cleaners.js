@@ -26,9 +26,9 @@ function loadBest() {
 	return bestCleanersAction;
 }
 
-function loadNearby() {
+function loadNearby(lat, lng) {
 	var caller = {
-		endpoint: 'cleaners/nearby/37.77/-122.42',
+		endpoint: 'cleaners/nearby/' + lat + '/' + lng,
 		types: [_constants2.default.FETCH_CLEANERS_REQUEST, _constants2.default.FETCH_CLEANERS_SUCCESS, _constants2.default.FETCH_CLEANERS_FAILURE]
 	};
 

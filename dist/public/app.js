@@ -34295,9 +34295,9 @@ function loadBest() {
 	return bestCleanersAction;
 }
 
-function loadNearby() {
+function loadNearby(lat, lng) {
 	var caller = {
-		endpoint: 'cleaners/nearby/37.77/-122.42',
+		endpoint: 'cleaners/nearby/' + lat + '/' + lng,
 		types: [_constants2.default.FETCH_CLEANERS_REQUEST, _constants2.default.FETCH_CLEANERS_SUCCESS, _constants2.default.FETCH_CLEANERS_FAILURE]
 	};
 
@@ -34436,8 +34436,12 @@ var CleanersList = function (_React$Component) {
 		}, _this.loadNearby = function () {
 			return function (event) {
 				event.preventDefault();
-				// load cleaners from the database
-				_this.props.loadNearby();
+
+				// get users location
+				var lat = 37.77;
+				var lng = -122.42;
+
+				_this.props.loadNearby(lat, lng);
 			};
 		}, _temp), _possibleConstructorReturn(_this, _ret);
 	}
@@ -34476,7 +34480,7 @@ var CleanersList = function (_React$Component) {
 				_react2.default.createElement(
 					'ul',
 					{ className: 'list' },
-					cleaners.map(function (cleaner, index) {
+					cleaners.length > 0 ? cleaners.map(function (cleaner, index) {
 						return _react2.default.createElement(
 							'li',
 							{ key: index, className: 'cleaner' },
@@ -34502,7 +34506,11 @@ var CleanersList = function (_React$Component) {
 								)
 							)
 						);
-					})
+					}) : _react2.default.createElement(
+						'p',
+						null,
+						'No cleaners to display'
+					)
 				)
 			);
 		}
@@ -34529,8 +34537,8 @@ function mapDispatchToProps(dispatch) {
 		loadBest: function loadBest() {
 			dispatch((0, _cleaners.loadBest)());
 		},
-		loadNearby: function loadNearby() {
-			dispatch((0, _cleaners.loadNearby)());
+		loadNearby: function loadNearby(lat, lng) {
+			dispatch((0, _cleaners.loadNearby)(lat, lng));
 		}
 	};
 }

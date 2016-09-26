@@ -17,9 +17,9 @@ export function loadBest() {
 	return bestCleanersAction;
 }
 
-export function loadNearby() {
+export function loadNearby(lat, lng) {
 	const caller = {
-		endpoint: 'cleaners/nearby/37.77/-122.42',
+		endpoint: 'cleaners/nearby/' + lat + '/' + lng,
 		types: [
 			constants.FETCH_CLEANERS_REQUEST,
 			constants.FETCH_CLEANERS_SUCCESS,

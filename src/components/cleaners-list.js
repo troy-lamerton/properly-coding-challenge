@@ -13,8 +13,12 @@ class CleanersList extends React.Component {
 
 	loadNearby = () => (event) => {
 		event.preventDefault();
-		// load cleaners from the database
-		this.props.loadNearby();
+
+		// get users location
+		const lat = 37.77;
+		const lng = -122.42;
+
+		this.props.loadNearby(lat, lng);
 	}
 
 	render() {
@@ -35,7 +39,7 @@ class CleanersList extends React.Component {
 					<a onClick={loadBest()}>BEST</a>
 				</div>
 				<ul className="list">
-					{cleaners.map((cleaner, index) => {
+					{(cleaners.length > 0) ? cleaners.map((cleaner, index) => {
 						return (
 							<li key={index} className="cleaner">
 								<div className="profile-pic">
@@ -51,7 +55,7 @@ class CleanersList extends React.Component {
 								</div>
 							</li>
 						);
-					})}
+					}) : <p>No cleaners to display</p>}
 				</ul>
 			</div>
 		);
@@ -76,8 +80,8 @@ function mapDispatchToProps(dispatch) {
 		loadBest: () => {
 			dispatch(loadBest());
 		},
-		loadNearby: () => {
-			dispatch(loadNearby());
+		loadNearby: (lat, lng) => {
+			dispatch(loadNearby(lat, lng));
 		}
 	};
 }
