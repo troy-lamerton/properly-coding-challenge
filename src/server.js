@@ -43,6 +43,7 @@ function sortByRating(a, b) {
 }
 
 cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
+	console.log('/nearby')
 	fs.readFile(path.join(__dirname, '../src/database/database.json'), 'utf8', (err, data) => {
 		if (err) {
 			throw err;

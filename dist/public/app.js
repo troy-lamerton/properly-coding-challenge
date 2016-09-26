@@ -34449,11 +34449,12 @@ var CleanersList = function (_React$Component) {
 			var loadBest = this.loadBest;
 			var loadNearby = this.loadNearby;
 
-			var cleanersStars = cleaners.map(function (cleaner, index) {
+			var cleanersStars = cleaners.map(function (cleaner) {
 				var starArray = new Array(Math.ceil(cleaner.rating));
 				starArray.fill(_react2.default.createElement('img', { className: 'star', src: '/star.png' }));
 				return starArray;
 			});
+
 			return _react2.default.createElement(
 				'div',
 				{ className: 'cleaners-list' },

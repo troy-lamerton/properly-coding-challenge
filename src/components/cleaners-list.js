@@ -22,11 +22,12 @@ class CleanersList extends React.Component {
 		const loadBest = this.loadBest;
 		const loadNearby = this.loadNearby;
 
-		let cleanersStars = cleaners.map((cleaner, index) => {
-			const starArray = new Array(Math.ceil(cleaner.rating))
-			starArray.fill(<img className="star" src="/star.png" />);
+		let cleanersStars = cleaners.map(cleaner => {
+			const starArray = new Array(Math.ceil(cleaner.rating));
+			starArray.fill(<img className="star" src="/star.png"/>);
 			return starArray;
 		});
+
 		return (
 			<div className="cleaners-list">
 				<div className="buttons">
