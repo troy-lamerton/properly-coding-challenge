@@ -46,7 +46,7 @@ var CleanersList = function (_React$Component) {
 			return function (event) {
 				event.preventDefault();
 				// load cleaners from the database
-				_this.props.loadBest();
+				_this.props.loadNearby();
 			};
 		}, _temp), _possibleConstructorReturn(_this, _ret);
 	}
@@ -55,29 +55,28 @@ var CleanersList = function (_React$Component) {
 		key: 'render',
 		value: function render() {
 			var cleaners = this.props.cleaners;
-			var loadCleaners = this.loadCleaners;
+			var loadBest = this.loadBest;
+			var loadNearby = this.loadNearby;
 
 			return _react2.default.createElement(
 				'div',
 				{ className: 'cleaners-list' },
 				_react2.default.createElement(
 					'a',
-					{ onClick: this.loadNearby() },
+					{ onClick: loadNearby() },
 					'Cleaners Nearby'
 				),
 				_react2.default.createElement('br', null),
 				_react2.default.createElement(
 					'a',
-					{ onClick: this.loadBest() },
+					{ onClick: loadBest() },
 					'Best Cleaners'
 				),
-				this.props.cleaners.map(function (cleaner) {
-					return _react2.default.createElement(
-						'p',
-						null,
-						'cleaner.name'
-					);
-				})
+				_react2.default.createElement(
+					'p',
+					null,
+					JSON.stringify(cleaners)
+				)
 			);
 		}
 	}]);
@@ -102,6 +101,9 @@ function mapDispatchToProps(dispatch) {
 	return {
 		loadBest: function loadBest() {
 			dispatch((0, _cleaners.loadBest)());
+		},
+		loadNearby: function loadNearby() {
+			dispatch((0, _cleaners.loadNearby)());
 		}
 	};
 }

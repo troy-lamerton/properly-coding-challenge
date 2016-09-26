@@ -108,6 +108,18 @@ cleanersRouter.get('/best', function (req, res) {
 				bestCleaners[2].push(cleaner);
 			}
 		});
+
+		// order three sections by response rate
+		bestCleaners = bestCleaners.map(function (cleaners) {
+			return cleaners.sort(function (a, b) {
+				return b.responseRate - a.responseRate;
+			});
+		});
+
+		bestCleaners = bestCleaners.reduce(function (cleaners, currentArray) {
+			return cleaners.concat(currentArray);
+		});
+
 		res.status(200).json(bestCleaners);
 	});
 });

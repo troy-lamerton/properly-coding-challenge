@@ -23,7 +23,7 @@ function cleanersReducer() {
 	var action = arguments[1];
 
 	switch (action.type) {
-		case _constants2.default.GET_CLEANERS:
+		case _constants2.default.FETCH_CLEANERS_SUCCESS:
 			return { payload: action.payload };
 		default:
 			return _extends({}, state);

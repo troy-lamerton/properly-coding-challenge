@@ -77,7 +77,7 @@ cleanersRouter.get('/best', (req, res) => {
 		let allCleaners = averageCleanerRatings(dataObject);
 		allCleaners.sort(sortByRating);
 
-		const bestCleaners = [
+		let bestCleaners = [
 			[],
 			[],
 			[]
@@ -85,7 +85,7 @@ cleanersRouter.get('/best', (req, res) => {
 
 		// round ratings to nearest 0.5
 		allCleaners = averageCleanerRatings(allCleaners, true);
-		
+
 		allCleaners.forEach(cleaner => {
 			if (cleaner.rating >= 4) {
 				bestCleaners[0].push(cleaner);
@@ -95,6 +95,18 @@ cleanersRouter.get('/best', (req, res) => {
 				bestCleaners[2].push(cleaner);
 			}
 		});
+
+		// order three sections by response rate
+		bestCleaners = bestCleaners.map(cleaners => {
+			return cleaners.sort((a, b) => {
+				return b.responseRate - a.responseRate;
+			});
+		});
+
+		bestCleaners = bestCleaners.reduce((cleaners, currentArray) => {
+			return cleaners.concat(currentArray);
+		});
+
 		res.status(200).json(bestCleaners);
 	});
 });

@@ -14,19 +14,18 @@ class CleanersList extends React.Component {
 	loadNearby = () => (event) => {
 		event.preventDefault();
 		// load cleaners from the database
-		this.props.loadBest();
+		this.props.loadNearby();
 	}
 
 	render() {
 		const cleaners = this.props.cleaners;
-		const loadCleaners = this.loadCleaners;
+		const loadBest = this.loadBest;
+		const loadNearby = this.loadNearby;
 
 		return (<div className="cleaners-list">
-			<a onClick={this.loadNearby()}>Cleaners Nearby</a><br/>
-			<a onClick={this.loadBest()}>Best Cleaners</a>
-			{this.props.cleaners.map(cleaner => {
-				return <p>cleaner.name</p>;
-			})}
+			<a onClick={loadNearby()}>Cleaners Nearby</a><br/>
+			<a onClick={loadBest()}>Best Cleaners</a>
+			{<p>{JSON.stringify(cleaners)}</p>}
 
 		</div>);
 	}
@@ -49,8 +48,11 @@ function mapDispatchToProps(dispatch) {
 	return {
 		loadBest: () => {
 			dispatch(loadBest());
+		},
+		loadNearby: () => {
+			dispatch(loadNearby());
 		}
-	}
+	};
 }
 
 export default connect(

@@ -1,10 +1,7 @@
-import test from 'ava';
+import test from 'tape';
 import rp from 'request-promise';
 
 const appUrl = 'http://localhost:3000';
-function getUrl (route) {
-	return request(appUrl).get(route);
-}
 
 test('get best cleaners', t => {
   return rp(appUrl + '/cleaners/best')
@@ -12,32 +9,37 @@ test('get best cleaners', t => {
   		return JSON.parse(body);
   	}).then( data => {
   		t.true(data instanceof Array);
-	    t.is(data.length, 3);
-	    
-	    t.true(data[0] instanceof Array);
-	    // check that cleaners in the first array have a rating >= 4
-	    t.true(data[0].every(cleaner => {
-	    	return cleaner.rating >= 4;
-	    }));
 
-	    t.true(data[1] instanceof Array);
-	    // check that cleaners in the second array have a rating >= 3 and < 4
-	    t.true(data[1].every(cleaner => {
-	    	return cleaner.rating >= 3 && cleaner.rating < 4;
-	    }));
+	    let splitData = [
+        [],
+        [],
+        []
+      ];
 
-	    t.true(data[2] instanceof Array);
-	    // check that cleaners in the third array have a rating >= 2 and < 3
-	    t.true(data[2].every(cleaner => {
-	    	return cleaner.rating >= 2 && cleaner.rating < 3;
-	    }));
+      // split all the cleaners into three arrays of the best, good and average cleaners
+      splitData[0] = data.filter(cleaner => {
+        return cleaner.rating >= 4;
+      });
+      splitData[1] = data.filter(cleaner => {
+        return cleaner.rating >= 3 && cleaner.rating < 4;
+      });
+      splitData[2] = data.filter(cleaner => {
+        return cleaner.rating >= 2 && cleaner.rating < 3;
+      });
+
+      // order the cleaners in each array by responseRate
+      splitData = splitData.forEach(cleaners => {
+        return cleaners.sort((a, b) => {
+          return b.responseRate - a.responseRate;
+        });
+      });
 
 	    // concat the three cleaners arrays
-	    const bestCleaners = [].concat.apply([], data)
-	    // check that cleaners are sorted in descending order by rating
-	    bestCleaners.reduce((previous, current) => {
-	    	if (previous.rating < current.rating) t.fail('Cleaners are not sorted in descending order by rating');
-	    });
+      console.log(splitData);
+	    const bestCleaners = [].concat.apply([], splitData);
+
+	    // compare this array to the original array received, they should be equivalent 
+	    t.deepEqual(data, bestCleaners);
 
   	})
   	.catch( err => {
@@ -58,8 +60,8 @@ test('get nearby cleaners', t => {
 			const cleanerMary = data.find(cleaner => {
 				return cleaner.name === 'Mary';
 			});
-			t.not(cleanerJohn, undefined);
-			t.not(cleanerMary, undefined);
+			t.false(cleanerJohn);
+			t.false(cleanerMary);
 
 	    t.true(cleanerJohn.rating >= cleanerMary.rating);
 		})
