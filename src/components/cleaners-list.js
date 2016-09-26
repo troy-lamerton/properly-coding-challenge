@@ -1,11 +1,20 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import { loadBest, loadNearby } from '../actions/cleaners';
+
 class CleanersList extends React.Component {
 
-	loadCleaners = () => (event) => {
+	loadBest = () => (event) => {
 		event.preventDefault();
 		// load cleaners from the database
+		this.props.loadBest();
+	}
+
+	loadNearby = () => (event) => {
+		event.preventDefault();
+		// load cleaners from the database
+		this.props.loadBest();
 	}
 
 	render() {
@@ -13,9 +22,11 @@ class CleanersList extends React.Component {
 		const loadCleaners = this.loadCleaners;
 
 		return (<div className="cleaners-list">
-			<a onClick={loadCleaners()}>Cleaners Nearby</a><br/>
-			<a onClick={loadCleaners()}>Best Cleaners</a>
-			{/* TODO: display cleaners */}
+			<a onClick={this.loadNearby()}>Cleaners Nearby</a><br/>
+			<a onClick={this.loadBest()}>Best Cleaners</a>
+			{this.props.cleaners.map(cleaner => {
+				return <p>cleaner.name</p>;
+			})}
 
 		</div>);
 	}
@@ -34,7 +45,15 @@ function mapStateToProps(state) {
 	};
 }
 
+function mapDispatchToProps(dispatch) {
+	return {
+		loadBest: () => {
+			dispatch(loadBest());
+		}
+	}
+}
+
 export default connect(
 	mapStateToProps,
-	{}
+	mapDispatchToProps
 )(CleanersList);

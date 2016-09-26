@@ -34272,14 +34272,34 @@ function extend() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.loadNearby = loadNearby;
 exports.loadBest = loadBest;
+exports.loadNearby = loadNearby;
 
 var _isomorphicFetch = require('isomorphic-fetch');
 
 var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
+var _constants = require('../constants');
+
+var _constants2 = _interopRequireDefault(_constants);
+
+var _fetch = require('../middleware/fetch');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function loadBest() {
+  var caller = {
+    endpoint: 'cleaners/best',
+    types: [_constants2.default.FETCH_CLEANERS_REQUEST, _constants2.default.FETCH_CLEANERS_SUCCESS, _constants2.default.FETCH_CLEANERS_FAILURE]
+  };
+
+  var bestCleanersAction = {
+    type: _constants2.default.GET_CLEANERS
+  };
+  bestCleanersAction[_fetch.CALL_HTTP] = caller;
+
+  return bestCleanersAction;
+}
 
 function loadNearby() {
   return function (dispatch) {
@@ -34291,13 +34311,7 @@ function loadNearby() {
   };
 }
 
-function loadBest() {
-  return function (dispatch) {
-    return (0, _isomorphicFetch2.default)('http://localhost:3000/cleaners/best');
-  };
-}
-
-},{"isomorphic-fetch":41}],267:[function(require,module,exports){
+},{"../constants":271,"../middleware/fetch":273,"isomorphic-fetch":41}],267:[function(require,module,exports){
 'use strict';
 
 var _reactDom = require('react-dom');
@@ -34393,6 +34407,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = require('react-redux');
 
+var _cleaners = require('../actions/cleaners');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -34415,10 +34431,17 @@ var CleanersList = function (_React$Component) {
 			args[_key] = arguments[_key];
 		}
 
-		return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = CleanersList.__proto__ || Object.getPrototypeOf(CleanersList)).call.apply(_ref, [this].concat(args))), _this), _this.loadCleaners = function () {
+		return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = CleanersList.__proto__ || Object.getPrototypeOf(CleanersList)).call.apply(_ref, [this].concat(args))), _this), _this.loadBest = function () {
 			return function (event) {
 				event.preventDefault();
 				// load cleaners from the database
+				_this.props.loadBest();
+			};
+		}, _this.loadNearby = function () {
+			return function (event) {
+				event.preventDefault();
+				// load cleaners from the database
+				_this.props.loadBest();
 			};
 		}, _temp), _possibleConstructorReturn(_this, _ret);
 	}
@@ -34434,15 +34457,22 @@ var CleanersList = function (_React$Component) {
 				{ className: 'cleaners-list' },
 				_react2.default.createElement(
 					'a',
-					{ onClick: loadCleaners() },
+					{ onClick: this.loadNearby() },
 					'Cleaners Nearby'
 				),
 				_react2.default.createElement('br', null),
 				_react2.default.createElement(
 					'a',
-					{ onClick: loadCleaners() },
+					{ onClick: this.loadBest() },
 					'Best Cleaners'
-				)
+				),
+				this.props.cleaners.map(function (cleaner) {
+					return _react2.default.createElement(
+						'p',
+						null,
+						'cleaner.name'
+					);
+				})
 			);
 		}
 	}]);
@@ -34463,9 +34493,17 @@ function mapStateToProps(state) {
 	};
 }
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps, {})(CleanersList);
+function mapDispatchToProps(dispatch) {
+	return {
+		loadBest: function loadBest() {
+			dispatch((0, _cleaners.loadBest)());
+		}
+	};
+}
 
-},{"react":216,"react-redux":63}],270:[function(require,module,exports){
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(CleanersList);
+
+},{"../actions/cleaners":266,"react":216,"react-redux":63}],270:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

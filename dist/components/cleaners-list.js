@@ -12,6 +12,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = require('react-redux');
 
+var _cleaners = require('../actions/cleaners');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -34,10 +36,17 @@ var CleanersList = function (_React$Component) {
 			args[_key] = arguments[_key];
 		}
 
-		return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = CleanersList.__proto__ || Object.getPrototypeOf(CleanersList)).call.apply(_ref, [this].concat(args))), _this), _this.loadCleaners = function () {
+		return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = CleanersList.__proto__ || Object.getPrototypeOf(CleanersList)).call.apply(_ref, [this].concat(args))), _this), _this.loadBest = function () {
 			return function (event) {
 				event.preventDefault();
 				// load cleaners from the database
+				_this.props.loadBest();
+			};
+		}, _this.loadNearby = function () {
+			return function (event) {
+				event.preventDefault();
+				// load cleaners from the database
+				_this.props.loadBest();
 			};
 		}, _temp), _possibleConstructorReturn(_this, _ret);
 	}
@@ -53,15 +62,22 @@ var CleanersList = function (_React$Component) {
 				{ className: 'cleaners-list' },
 				_react2.default.createElement(
 					'a',
-					{ onClick: loadCleaners() },
+					{ onClick: this.loadNearby() },
 					'Cleaners Nearby'
 				),
 				_react2.default.createElement('br', null),
 				_react2.default.createElement(
 					'a',
-					{ onClick: loadCleaners() },
+					{ onClick: this.loadBest() },
 					'Best Cleaners'
-				)
+				),
+				this.props.cleaners.map(function (cleaner) {
+					return _react2.default.createElement(
+						'p',
+						null,
+						'cleaner.name'
+					);
+				})
 			);
 		}
 	}]);
@@ -82,4 +98,12 @@ function mapStateToProps(state) {
 	};
 }
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps, {})(CleanersList);
+function mapDispatchToProps(dispatch) {
+	return {
+		loadBest: function loadBest() {
+			dispatch((0, _cleaners.loadBest)());
+		}
+	};
+}
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(CleanersList);
