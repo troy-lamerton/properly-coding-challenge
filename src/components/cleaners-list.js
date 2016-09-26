@@ -66,7 +66,9 @@ CleanersList.propTypes = {
 	cleaners: PropTypes.arrayOf(PropTypes.shape({
 		rating: PropTypes.number.isRequired,
 		name: PropTypes.string
-	}))
+	})),
+	loadBest: PropTypes.func,
+	loadNearby: PropTypes.func
 };
 
 function mapStateToProps(state) {

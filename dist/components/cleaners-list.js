@@ -132,7 +132,9 @@ CleanersList.propTypes = {
 	cleaners: _react.PropTypes.arrayOf(_react.PropTypes.shape({
 		rating: _react.PropTypes.number.isRequired,
 		name: _react.PropTypes.string
-	}))
+	})),
+	loadBest: _react.PropTypes.func,
+	loadNearby: _react.PropTypes.func
 };
 
 function mapStateToProps(state) {

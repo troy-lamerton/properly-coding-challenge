@@ -3,6 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.averageCleanerRatings = averageCleanerRatings;
+exports.formatOrderCleaners = formatOrderCleaners;
 
 var _path = require('path');
 
@@ -34,30 +36,56 @@ function averageCleanerRatings(cleanersArray) {
 	var round = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
 	return cleanersArray.map(function (cleaner) {
-		var editedCleaner = {
-			name: cleaner.name,
-			picture: cleaner.picture
-		};
+		delete cleaner.lat;
+		delete cleaner.lng;
 
 		// compute the average rating if it hasn't been already
-		if (cleaner.ratings) {
-			editedCleaner.rating = cleaner.ratings.reduce(function (sum, number) {
+		if (!cleaner.rating) {
+			cleaner.rating = cleaner.ratings.reduce(function (sum, number) {
 				return sum + number;
 			}) / cleaner.ratings.length;
 		} else {
-			editedCleaner.rating = cleaner.rating;
+			cleaner.rating = cleaner.rating;
 		}
 
 		if (round) {
 			// round rating to nearest 0.5
-			editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
+			cleaner.rating = Math.round(cleaner.rating * 2) / 2;
 		}
-		return editedCleaner;
+		return cleaner;
 	});
 }
 
 function sortByRating(a, b) {
 	return b.rating - a.rating;
+}
+
+function formatOrderCleaners(cleaners) {
+	var bestCleaners = [[], [], []];
+
+	// split best cleaners into rating intervals
+	cleaners.forEach(function (cleaner) {
+		if (cleaner.rating >= 4) {
+			bestCleaners[0].push(cleaner);
+		} else if (cleaner.rating >= 3) {
+			bestCleaners[1].push(cleaner);
+		} else if (cleaner.rating >= 2) {
+			bestCleaners[2].push(cleaner);
+		}
+	});
+
+	// order each interval by response rate
+	bestCleaners = bestCleaners.map(function (cleaners) {
+		return cleaners.sort(function (a, b) {
+			return b.responseRate - a.responseRate;
+		});
+	});
+	// concatenate the arrays into one
+	bestCleaners = bestCleaners.reduce(function (cleaners, currentArray) {
+		return cleaners.concat(currentArray);
+	});
+
+	return bestCleaners;
 }
 
 cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
@@ -95,31 +123,10 @@ cleanersRouter.get('/best', function (req, res) {
 		var allCleaners = averageCleanerRatings(dataObject);
 		allCleaners.sort(sortByRating);
 
-		var bestCleaners = [[], [], []];
-
 		// round ratings to nearest 0.5
 		allCleaners = averageCleanerRatings(allCleaners, true);
 
-		allCleaners.forEach(function (cleaner) {
-			if (cleaner.rating >= 4) {
-				bestCleaners[0].push(cleaner);
-			} else if (cleaner.rating >= 3) {
-				bestCleaners[1].push(cleaner);
-			} else if (cleaner.rating >= 2) {
-				bestCleaners[2].push(cleaner);
-			}
-		});
-
-		// order three sections by response rate
-		bestCleaners = bestCleaners.map(function (cleaners) {
-			return cleaners.sort(function (a, b) {
-				return b.responseRate - a.responseRate;
-			});
-		});
-
-		bestCleaners = bestCleaners.reduce(function (cleaners, currentArray) {
-			return cleaners.concat(currentArray);
-		});
+		var bestCleaners = formatOrderCleaners(allCleaners);
 
 		res.status(200).json(bestCleaners);
 	});

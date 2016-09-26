@@ -15,32 +15,62 @@ function cleanerIsNearby(myLocation, cleaner) {
 }
 
 /* remove location data and average the cleaners ratings */
-function averageCleanerRatings(cleanersArray, round = false) {
+export function averageCleanerRatings(cleanersArray, round = false) {
 	return cleanersArray.map(cleaner => {
-		const editedCleaner = {
-			name: cleaner.name,
-			picture: cleaner.picture
-		};
+		delete cleaner.lat;
+		delete cleaner.lng;
 
 		// compute the average rating if it hasn't been already
-		if (cleaner.ratings) {
-			editedCleaner.rating = cleaner.ratings.reduce((sum, number) => {
+		if (!cleaner.rating) {
+			cleaner.rating = cleaner.ratings.reduce((sum, number) => {
 				return sum + number;
 			}) / cleaner.ratings.length;
 		} else {
-			editedCleaner.rating = cleaner.rating;
+			cleaner.rating = cleaner.rating;
 		}
 
 		if (round) {
 			// round rating to nearest 0.5
-			editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
+			cleaner.rating = Math.round(cleaner.rating * 2) / 2;
 		}
-		return editedCleaner;
+		return cleaner;
 	});
 }
 
 function sortByRating(a, b) {
 	return b.rating - a.rating;
+}
+
+export function formatOrderCleaners(cleaners) {
+	let bestCleaners = [
+		[],
+		[],
+		[]
+	];
+
+	// split best cleaners into rating intervals
+	cleaners.forEach(cleaner => {
+		if (cleaner.rating >= 4) {
+			bestCleaners[0].push(cleaner);
+		} else if (cleaner.rating >= 3) {
+			bestCleaners[1].push(cleaner);
+		}	else if (cleaner.rating >= 2) {
+			bestCleaners[2].push(cleaner);
+		}
+	});
+
+	// order each interval by response rate
+	bestCleaners = bestCleaners.map(cleaners => {
+		return cleaners.sort((a, b) => {
+			return b.responseRate - a.responseRate;
+		});
+	});
+	// concatenate the arrays into one
+	bestCleaners = bestCleaners.reduce((cleaners, currentArray) => {
+		return cleaners.concat(currentArray);
+	});
+
+	return bestCleaners;
 }
 
 cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
@@ -78,35 +108,10 @@ cleanersRouter.get('/best', (req, res) => {
 		let allCleaners = averageCleanerRatings(dataObject);
 		allCleaners.sort(sortByRating);
 
-		let bestCleaners = [
-			[],
-			[],
-			[]
-		];
-
 		// round ratings to nearest 0.5
 		allCleaners = averageCleanerRatings(allCleaners, true);
 
-		allCleaners.forEach(cleaner => {
-			if (cleaner.rating >= 4) {
-				bestCleaners[0].push(cleaner);
-			} else if (cleaner.rating >= 3) {
-				bestCleaners[1].push(cleaner);
-			}	else if (cleaner.rating >= 2) {
-				bestCleaners[2].push(cleaner);
-			}
-		});
-
-		// order three sections by response rate
-		bestCleaners = bestCleaners.map(cleaners => {
-			return cleaners.sort((a, b) => {
-				return b.responseRate - a.responseRate;
-			});
-		});
-
-		bestCleaners = bestCleaners.reduce((cleaners, currentArray) => {
-			return cleaners.concat(currentArray);
-		});
+		let bestCleaners = formatOrderCleaners(allCleaners);
 
 		res.status(200).json(bestCleaners);
 	});

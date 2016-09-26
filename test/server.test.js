@@ -1,50 +1,98 @@
 import test from 'tape';
 import rp from 'request-promise';
 
+import { averageCleanerRatings, formatOrderCleaners } from '../src/server'
+
 const appUrl = 'http://localhost:3000';
 
 test('get best cleaners', t => {
-  return rp(appUrl + '/cleaners/best')
-  	.then( body => {
-  		return JSON.parse(body);
-  	}).then( data => {
-  		t.true(data instanceof Array);
+  // construct array of cleaners
+  const cleaners = [
+    {
+      "name": "Harold",
+      "responseRate": 0.6,
+      "ratings": [5, 5],
+    },
+    {
+      "name": "Jesse",
+      "responseRate": 1.0,
+      "ratings": [3, 2],
+    },
+    {
+      "name": "Sarah",
+      "responseRate": 0.8,
+      "ratings": [5, 4],
+    },
+    {
+      "name": "Trish",
+      "responseRate": 0.4,
+      "ratings": [3, 4],
+    },
+  ]
 
-	    let splitData = [
-        [],
-        [],
-        []
-      ];
+  // expected averaged ratings array of cleaners
+  const expectedAverages = [
+    {
+      "name": "Harold",
+      "responseRate": 0.6,
+      "rating": 5,
+      "ratings": [5, 5]
+    },
+    {
+      "name": "Jesse",
+      "responseRate": 1.0,
+      "rating": 2.5,
+      "ratings": [3, 2]
+    },
+    {
+      "name": "Sarah",
+      "responseRate": 0.8,
+      "rating": 4.5,
+      "ratings": [5, 4]
+    },
+    {
+      "name": "Trish",
+      "responseRate": 0.4,
+      "rating": 3.5,
+      "ratings": [3, 4]
+    }
+  ]
+  const actualAverages = averageCleanerRatings(cleaners);
 
-      // split all the cleaners into three arrays of the best, good and average cleaners
-      splitData[0] = data.filter(cleaner => {
-        return cleaner.rating >= 4;
-      });
-      splitData[1] = data.filter(cleaner => {
-        return cleaner.rating >= 3 && cleaner.rating < 4;
-      });
-      splitData[2] = data.filter(cleaner => {
-        return cleaner.rating >= 2 && cleaner.rating < 3;
-      });
-
-      // order the cleaners in each array by responseRate
-      splitData = splitData.forEach(cleaners => {
-        return cleaners.sort((a, b) => {
-          return b.responseRate - a.responseRate;
-        });
-      });
-
-	    // concat the three cleaners arrays
-      console.log(splitData);
-	    const bestCleaners = [].concat.apply([], splitData);
-
-	    // compare this array to the original array received, they should be equivalent 
-	    t.deepEqual(data, bestCleaners);
-
-  	})
-  	.catch( err => {
-  		t.fail(`The request resulted in the error: ${err}`);
-  	});
+  t.equal(actualAverages.length, expectedAverages.length, 'Average arrays are same length');
+  t.deepEqual(actualAverages, expectedAverages, 'The ratings of cleaners are averaged correctly');
+  
+  // expected ordered array
+  const expectedOrder = [
+    {
+      "name": "Sarah",
+      "responseRate": 0.8,
+      "rating": 4.5,
+      "ratings": [5, 4]
+    },
+    {
+      "name": "Harold",
+      "responseRate": 0.6,
+      "rating": 5,
+      "ratings": [5, 5]
+    },
+    {
+      "name": "Trish",
+      "responseRate": 0.4,
+      "rating": 3.5,
+      "ratings": [3, 4]
+    },
+    {
+      "name": "Jesse",
+      "responseRate": 1.0,
+      "rating": 2.5,
+      "ratings": [3, 2]
+    }
+  ]
+  const actualResult = formatOrderCleaners(actualAverages);
+  t.equal(actualResult.length, expectedOrder.length, 'Averaged array is same length as original');
+  t.deepEqual(actualResult, expectedOrder, 'Best cleaners are sorted correctly');
+  t.end();
 });
 
 test('get nearby cleaners', t => {
@@ -52,20 +100,22 @@ test('get nearby cleaners', t => {
 		.then( body => {
   		return JSON.parse(body);
   	}).then( data => {
-			t.true(data instanceof Array);
-			t.true(data.length >= 2);
+			t.true(data instanceof Array, '/cleaners/nearby/.../... responds with an array');
+			t.true(data.length >= 2, 'Two or more cleaners are returned');
 			const cleanerJohn = data.find(cleaner => {
 				return cleaner.name === 'John';
 			});
 			const cleanerMary = data.find(cleaner => {
 				return cleaner.name === 'Mary';
 			});
-			t.false(cleanerJohn);
-			t.false(cleanerMary);
+			t.true(cleanerJohn, 'John is in the database');
+			t.true(cleanerMary, 'Mary is in the database');
 
-	    t.true(cleanerJohn.rating >= cleanerMary.rating);
-		})
-		.catch( err => {
-			t.fail(`The request resulted in the error: ${err}`);
-		});
+	    t.true(cleanerJohn.rating >= cleanerMary.rating, 'John has a higher rating than Mary');
+      t.end();
+    })
+    .catch( err => {
+      t.fail(`The request resulted in the error: ${err}`);
+      t.end();
+    });
 })
