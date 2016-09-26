@@ -34449,19 +34449,28 @@ var CleanersList = function (_React$Component) {
 			var loadBest = this.loadBest;
 			var loadNearby = this.loadNearby;
 
+			var cleanersStars = cleaners.map(function (cleaner, index) {
+				var starArray = new Array(Math.ceil(cleaner.rating));
+				starArray.fill(_react2.default.createElement('img', { className: 'star', src: '/star.png' }));
+				return starArray;
+			});
 			return _react2.default.createElement(
 				'div',
 				{ className: 'cleaners-list' },
 				_react2.default.createElement(
-					'a',
-					{ onClick: loadNearby() },
-					'Cleaners Nearby'
-				),
-				_react2.default.createElement('br', null),
-				_react2.default.createElement(
-					'a',
-					{ onClick: loadBest() },
-					'Best Cleaners'
+					'div',
+					{ className: 'buttons' },
+					_react2.default.createElement(
+						'a',
+						{ className: 'left', onClick: loadNearby() },
+						'NEARBY'
+					),
+					_react2.default.createElement('br', null),
+					_react2.default.createElement(
+						'a',
+						{ className: 'right', onClick: loadBest() },
+						'BEST'
+					)
 				),
 				_react2.default.createElement(
 					'ul',
@@ -34482,11 +34491,13 @@ var CleanersList = function (_React$Component) {
 								_react2.default.createElement(
 									'ul',
 									{ className: 'star-list' },
-									_react2.default.createElement(
-										'li',
-										null,
-										_react2.default.createElement('img', { className: 'star', src: '/star.png' })
-									)
+									cleanersStars[index].map(function (image, index) {
+										return _react2.default.createElement(
+											'li',
+											{ key: index },
+											image
+										);
+									})
 								)
 							)
 						);

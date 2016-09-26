@@ -22,28 +22,38 @@ class CleanersList extends React.Component {
 		const loadBest = this.loadBest;
 		const loadNearby = this.loadNearby;
 
-		return (<div className="cleaners-list">
-			<a onClick={loadNearby()}>Cleaners Nearby</a><br/>
-			<a onClick={loadBest()}>Best Cleaners</a>
-			<ul className="list">
-				{cleaners.map((cleaner, index) => {
-					return (
-						<li key={index} className="cleaner">
-							<div className="profile-pic">
-								<img src="https://upload.wikimedia.org/wikipedia/en/7/70/Shawn_Tok_Profile.jpg"/>
-							</div>
-							<div className="cleaner-info">
-								{cleaner.name}
-								<ul className="star-list">
-									<li><img className="star" src="/star.png" /></li>
-								</ul>
-							</div>
-						</li>
-					);
-				})}
-			</ul>
-
-		</div>);
+		let cleanersStars = cleaners.map((cleaner, index) => {
+			const starArray = new Array(Math.ceil(cleaner.rating))
+			starArray.fill(<img className="star" src="/star.png" />);
+			return starArray;
+		});
+		return (
+			<div className="cleaners-list">
+				<div className="buttons">
+					<a className="left" onClick={loadNearby()}>NEARBY</a><br/>
+					<a className="right" onClick={loadBest()}>BEST</a>
+				</div>
+				<ul className="list">
+					{cleaners.map((cleaner, index) => {
+						return (
+							<li key={index} className="cleaner">
+								<div className="profile-pic">
+									<img src="https://upload.wikimedia.org/wikipedia/en/7/70/Shawn_Tok_Profile.jpg"/>
+								</div>
+								<div className="cleaner-info">
+									{cleaner.name}
+									<ul className="star-list">
+										{cleanersStars[index].map((image, index) => {
+											return <li key={index}>{image}</li>;
+										})}
+									</ul>
+								</div>
+							</li>
+						);
+					})}
+				</ul>
+			</div>
+		);
 	}
 
 }
