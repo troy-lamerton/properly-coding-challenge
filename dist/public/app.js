@@ -34464,9 +34464,33 @@ var CleanersList = function (_React$Component) {
 					'Best Cleaners'
 				),
 				_react2.default.createElement(
-					'p',
-					null,
-					JSON.stringify(cleaners)
+					'ul',
+					{ className: 'list' },
+					cleaners.map(function (cleaner, index) {
+						return _react2.default.createElement(
+							'li',
+							{ key: index, className: 'cleaner' },
+							_react2.default.createElement(
+								'div',
+								{ className: 'profile-pic' },
+								_react2.default.createElement('img', { src: 'https://upload.wikimedia.org/wikipedia/en/7/70/Shawn_Tok_Profile.jpg' })
+							),
+							_react2.default.createElement(
+								'div',
+								{ className: 'cleaner-info' },
+								cleaner.name,
+								_react2.default.createElement(
+									'ul',
+									{ className: 'star-list' },
+									_react2.default.createElement(
+										'li',
+										null,
+										_react2.default.createElement('img', { className: 'star', src: '/star.png' })
+									)
+								)
+							)
+						);
+					})
 				)
 			);
 		}

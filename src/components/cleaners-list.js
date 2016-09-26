@@ -25,7 +25,23 @@ class CleanersList extends React.Component {
 		return (<div className="cleaners-list">
 			<a onClick={loadNearby()}>Cleaners Nearby</a><br/>
 			<a onClick={loadBest()}>Best Cleaners</a>
-			{<p>{JSON.stringify(cleaners)}</p>}
+			<ul className="list">
+				{cleaners.map((cleaner, index) => {
+					return (
+						<li key={index} className="cleaner">
+							<div className="profile-pic">
+								<img src="https://upload.wikimedia.org/wikipedia/en/7/70/Shawn_Tok_Profile.jpg"/>
+							</div>
+							<div className="cleaner-info">
+								{cleaner.name}
+								<ul className="star-list">
+									<li><img className="star" src="/star.png" /></li>
+								</ul>
+							</div>
+						</li>
+					);
+				})}
+			</ul>
 
 		</div>);
 	}
