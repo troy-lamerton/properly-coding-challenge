@@ -32,7 +32,7 @@ function averageCleanerRatings(cleanersArray, round = false) {
 
 		if (round) {
 			// round rating to nearest 0.5
-			editedCleaner.rating = Math.round(cleaner.rating * 2) / 2;
+			editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
 		}
 		return editedCleaner;
 	});
@@ -43,7 +43,6 @@ function sortByRating(a, b) {
 }
 
 cleanersRouter.get('/nearby/:lat/:lng', (req, res) => {
-	console.log('/nearby')
 	fs.readFile(path.join(__dirname, '../src/database/database.json'), 'utf8', (err, data) => {
 		if (err) {
 			throw err;

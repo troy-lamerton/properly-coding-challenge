@@ -49,7 +49,7 @@ function averageCleanerRatings(cleanersArray) {
 
 		if (round) {
 			// round rating to nearest 0.5
-			editedCleaner.rating = Math.round(cleaner.rating * 2) / 2;
+			editedCleaner.rating = Math.round(editedCleaner.rating * 2) / 2;
 		}
 		return editedCleaner;
 	});
@@ -60,7 +60,6 @@ function sortByRating(a, b) {
 }
 
 cleanersRouter.get('/nearby/:lat/:lng', function (req, res) {
-	console.log('/nearby');
 	_fs2.default.readFile(_path2.default.join(__dirname, '../src/database/database.json'), 'utf8', function (err, data) {
 		if (err) {
 			throw err;
