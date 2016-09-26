@@ -96,7 +96,7 @@ var CleanersList = function (_React$Component) {
 							_react2.default.createElement(
 								'div',
 								{ className: 'profile-pic' },
-								_react2.default.createElement('img', { src: 'https://upload.wikimedia.org/wikipedia/en/7/70/Shawn_Tok_Profile.jpg' })
+								_react2.default.createElement('img', { src: cleaner.picture })
 							),
 							_react2.default.createElement(
 								'div',

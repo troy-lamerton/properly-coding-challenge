@@ -18,7 +18,8 @@ function cleanerIsNearby(myLocation, cleaner) {
 function averageCleanerRatings(cleanersArray, round = false) {
 	return cleanersArray.map(cleaner => {
 		const editedCleaner = {
-			name: cleaner.name
+			name: cleaner.name,
+			picture: cleaner.picture
 		};
 
 		// compute the average rating if it hasn't been already

@@ -35,7 +35,8 @@ function averageCleanerRatings(cleanersArray) {
 
 	return cleanersArray.map(function (cleaner) {
 		var editedCleaner = {
-			name: cleaner.name
+			name: cleaner.name,
+			picture: cleaner.picture
 		};
 
 		// compute the average rating if it hasn't been already

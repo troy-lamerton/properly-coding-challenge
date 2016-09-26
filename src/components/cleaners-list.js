@@ -43,7 +43,7 @@ class CleanersList extends React.Component {
 						return (
 							<li key={index} className="cleaner">
 								<div className="profile-pic">
-									<img src="https://upload.wikimedia.org/wikipedia/en/7/70/Shawn_Tok_Profile.jpg"/>
+									<img src={cleaner.picture}/>
 								</div>
 								<div className="cleaner-info">
 									{cleaner.name}
