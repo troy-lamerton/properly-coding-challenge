@@ -4,7 +4,7 @@ import types from '../constants';
 
 export function cleanersReducer(state = { payload: [] }, action) {
 	switch (action.type) {
-		case types.GET_CLEANERS:
+		case types.FETCH_CLEANERS_SUCCESS:
 			return { payload: action.payload };
 		default:
 			return { ...state };
