@@ -71,13 +71,13 @@ var CleanersList = function (_React$Component) {
 					{ className: 'buttons' },
 					_react2.default.createElement(
 						'a',
-						{ className: 'left', onClick: loadNearby() },
+						{ onClick: loadNearby() },
 						'NEARBY'
 					),
 					_react2.default.createElement('br', null),
 					_react2.default.createElement(
 						'a',
-						{ className: 'right', onClick: loadBest() },
+						{ onClick: loadBest() },
 						'BEST'
 					)
 				),

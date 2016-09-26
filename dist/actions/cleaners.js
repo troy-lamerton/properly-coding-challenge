@@ -28,7 +28,7 @@ function loadBest() {
 
 function loadNearby() {
 	var caller = {
-		endpoint: '/nearby/37.77/122.42',
+		endpoint: 'nearby/37.77/122.42',
 		types: [_constants2.default.FETCH_CLEANERS_REQUEST, _constants2.default.FETCH_CLEANERS_SUCCESS, _constants2.default.FETCH_CLEANERS_FAILURE]
 	};
 

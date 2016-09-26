@@ -34297,7 +34297,7 @@ function loadBest() {
 
 function loadNearby() {
 	var caller = {
-		endpoint: '/nearby/37.77/122.42',
+		endpoint: 'nearby/37.77/122.42',
 		types: [_constants2.default.FETCH_CLEANERS_REQUEST, _constants2.default.FETCH_CLEANERS_SUCCESS, _constants2.default.FETCH_CLEANERS_FAILURE]
 	};
 
@@ -34462,13 +34462,13 @@ var CleanersList = function (_React$Component) {
 					{ className: 'buttons' },
 					_react2.default.createElement(
 						'a',
-						{ className: 'left', onClick: loadNearby() },
+						{ onClick: loadNearby() },
 						'NEARBY'
 					),
 					_react2.default.createElement('br', null),
 					_react2.default.createElement(
 						'a',
-						{ className: 'right', onClick: loadBest() },
+						{ onClick: loadBest() },
 						'BEST'
 					)
 				),

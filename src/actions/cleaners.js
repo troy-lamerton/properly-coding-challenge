@@ -19,7 +19,7 @@ export function loadBest() {
 
 export function loadNearby() {
 	const caller = {
-		endpoint: '/nearby/37.77/122.42',
+		endpoint: 'nearby/37.77/122.42',
 		types: [
 			constants.FETCH_CLEANERS_REQUEST,
 			constants.FETCH_CLEANERS_SUCCESS,

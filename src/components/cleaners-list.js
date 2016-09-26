@@ -30,8 +30,8 @@ class CleanersList extends React.Component {
 		return (
 			<div className="cleaners-list">
 				<div className="buttons">
-					<a className="left" onClick={loadNearby()}>NEARBY</a><br/>
-					<a className="right" onClick={loadBest()}>BEST</a>
+					<a onClick={loadNearby()}>NEARBY</a><br/>
+					<a onClick={loadBest()}>BEST</a>
 				</div>
 				<ul className="list">
 					{cleaners.map((cleaner, index) => {
